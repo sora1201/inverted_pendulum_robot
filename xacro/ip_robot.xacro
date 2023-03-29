@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot name="ip_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:arg name="robot_name" default="ip_robot"/>
+    <xacro:include filename="$(find inverted_pendulum_robot)/xacro/move_macro.xacro"/>
+    <xacro:include filename="$(find inverted_pendulum_robot)/xacro/imu_macro.xacro"/>
+
+    <link name="base_link"/>
+
+    <xacro:body_macro parent="base_link"/>
+    <xacro:wheel_macro prefix="left_wheel" parent="base_link" xyz="0 0.2 0.05"/>
+    <xacro:wheel_macro prefix="right_wheel" parent="base_link" xyz="0 -0.2 0.05"/>
+    <xacro:imu_macro prefix="imu" parent="base_link" xyz="0 0 0.55" robot_name="$(arg robot_name)"/>
+
+    <gazebo>
+        <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+            <leftJoint>left_wheel_joint</leftJoint>
+            <rightJoint>right_wheel_joint</rightJoint>
+            <robotBaseFrame>/base_link</robotBaseFrame>
+            <wheelSeparation>0.4</wheelSeparation>
+            <wheelDiameter>0.1</wheelDiameter>
+            <publishWheelJointState>true</publishWheelJointState>
+        </plugin>
+    </gazebo>
+</robot>
